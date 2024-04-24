@@ -10,6 +10,7 @@ const thoughtSchema = new Schema(
       required: true,
     },
     createdAt: {
+      //virtual to do getter used as formatting?
       type: Date,
       default: Date.now,
     },
