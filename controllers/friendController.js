@@ -27,7 +27,7 @@ module.exports = {
       }
       res.status(200).json({
         message: "New friend connection made",
-        usersFriends: usersNewFriend.friends,
+        userFriends: usersNewFriend.friends,
         friendsFriends: newFriendOfUser.friends,
       });
     } catch (err) {

@@ -10,7 +10,6 @@ const thoughtSchema = new Schema(
       required: true,
     },
     createdAt: {
-      //virtual to do getter used as formatting?
       type: Date,
       default: Date.now,
     },
@@ -27,6 +26,18 @@ const thoughtSchema = new Schema(
     id: false,
   }
 );
+
+thoughtSchema.methods.addReaction = function (reaction) {
+  this.reactions.push(reaction);
+
+  thoughtSchema.methods.findReactionIndex = function (reactionId) {
+    for (i = 0; i < this.reactions.length; i++) {
+      if (this.reactions[i]._id === reactionId) {
+        return i;
+      }
+    }
+  };
+};
 
 thoughtSchema.virtual("reactionCount").get(function () {
   return this.reactions.length;

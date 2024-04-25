@@ -39,6 +39,16 @@ module.exports = {
         { $addToSet: { thoughts: bestThought._id } },
         { new: true }
       );
+      if (!congradulateUserForThinking) {
+        res
+          .status(404)
+          .json({
+            message:
+              "Thought created but no user could be found with provided!",
+            unknowUsername: bestThought.username,
+          });
+      }
+
       res.status(200).json({
         message: "Thought created and added to users thoughts array",
         newThought: bestThought,

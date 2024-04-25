@@ -1,14 +1,18 @@
 const router = require("express").Router();
 const {
-  mindReadThoughts,
+  mindReadAll,
   mindReadSingleThought,
   createThought,
   manipulateThought,
   obliterateThought,
 } = require("../../../controllers/thoughtController");
+const {
+  addToDrama,
+  removeYourselfFromDrama,
+} = require("../../../controllers/reactionController");
 
 //http://localhost:3001/api/thoughts
-router.route("/").get(mindReadThoughts).post(createThought);
+router.route("/").get(mindReadAll).post(createThought);
 
 //http://localhost:3001/api/thoughts/:thoughtId
 router
@@ -16,5 +20,14 @@ router
   .get(mindReadSingleThought)
   .put(manipulateThought)
   .delete(obliterateThought);
+
+//http://localhost:3001/api/thoughts/:thoughtId/reactions
+router
+  .route("/:thoughtId/reactions")
+  .post(addToDrama)
+  .delete(removeYourselfFromDrama);
+
+//http://localhost:3001/api/thoughts/:thoughtId/reactions/:reactionId
+router.route("/:thoughtId/reactions/:reactionId");
 
 module.exports = router;
