@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Reaction = require("./Reaction");
+const { ObjectId } = require("mongoose").Types;
 
 const thoughtSchema = new Schema(
   {
@@ -27,16 +28,16 @@ const thoughtSchema = new Schema(
   }
 );
 
-thoughtSchema.methods.addReaction = function (reaction) {
-  this.reactions.push(reaction);
-
-  thoughtSchema.methods.findReactionIndex = function (reactionId) {
-    for (i = 0; i < this.reactions.length; i++) {
-      if (this.reactions[i]._id === reactionId) {
-        return i;
-      }
+thoughtSchema.methods.removeReactionId = function (id) {
+  const remainingReactions = [];
+  for (i = 0; i < this.reactions.length; i++) {
+    if (this.reactions[i]._id === id) {
+      remainingReactions;
+    } else {
+      remainingReactions.push(this.reactions[i]);
     }
-  };
+  }
+  return remainingReactions;
 };
 
 thoughtSchema.virtual("reactionCount").get(function () {

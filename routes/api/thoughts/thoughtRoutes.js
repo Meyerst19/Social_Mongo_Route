@@ -27,7 +27,4 @@ router
   .post(addToDrama)
   .delete(removeYourselfFromDrama);
 
-//http://localhost:3001/api/thoughts/:thoughtId/reactions/:reactionId
-router.route("/:thoughtId/reactions/:reactionId");
-
 module.exports = router;

@@ -37,16 +37,13 @@ module.exports = {
       const congradulateUserForThinking = await User.findOneAndUpdate(
         { username: bestThought.username },
         { $addToSet: { thoughts: bestThought._id } },
-        { new: true }
+        { runValidators: true, new: true }
       );
       if (!congradulateUserForThinking) {
-        res
-          .status(404)
-          .json({
-            message:
-              "Thought created but no user could be found with provided!",
-            unknowUsername: bestThought.username,
-          });
+        res.status(404).json({
+          message: "Thought created but no user could be found with provided!",
+          unknowUsername: bestThought.username,
+        });
       }
 
       res.status(200).json({
@@ -64,7 +61,7 @@ module.exports = {
       const jediMindTrick = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
         { $set: { thoughtText: req.body.thoughtText } },
-        { new: true }
+        { runValidators: true, new: true }
       );
 
       if (!jediMindTrick) {
@@ -81,7 +78,10 @@ module.exports = {
     try {
       const makeUserForgetFirst = await Thought.findOne({
         _id: req.params.thoughtId,
-      }).username;
+      });
+
+      console.log(makeUserForgetFirst);
+
       if (!makeUserForgetFirst) {
         res.status(404).json({
           message:
@@ -90,10 +90,10 @@ module.exports = {
       }
       const forgetfullUser = await User.findOneAndUpdate(
         {
-          username: makeUserForgetFirst,
+          username: makeUserForgetFirst.username,
         },
         { $pull: { thoughts: req.params.thoughtId } },
-        { new: true }
+        { runValidators: true, new: true }
       );
 
       if (!forgetfullUser) {

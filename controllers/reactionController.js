@@ -91,12 +91,21 @@ module.exports = {
         { new: true }
       );
 
+      // const thoughtHolding = await Thought.findOne({
+      //   _id: req.params.thoughtId,
+      // });
+      // console.log(thoughtHolding);
+      // console.log(thoughtHolding.methods);
       if (!thoughtThatStartedIt) {
         res
           .status(404)
-          .json({ message: "Thought with id provied could not be found!" });
+          .json({ message: "Thought with id provided could not be found!" });
       }
+      // const remainingReactions = thoughtHolding.removeReactionId(
+      //   req.body.reactionId
+      // );
 
+      // console.log(thoughtHolding.removeReactionId(req.body.reactionId));
       // const beingTheBetterPerson = await Reaction.findOneAndDelete({
       //   _id: req.body.reactionId,
       // });
@@ -109,7 +118,7 @@ module.exports = {
         message: "Your reaction has been removed",
         // deletedReaction: beingTheBetterPerson,
         // thoughtsReactions: thoughtThatStartedIt.reactions,
-        remaingReaction: thoughtThatStartedIt.reactions,
+        remaingReaction: thoughtThatStartedIt,
       });
     } catch (err) {
       res.status(500).json({ message: err });

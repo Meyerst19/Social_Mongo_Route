@@ -16,6 +16,7 @@ module.exports = {
   async getSingleUser(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.userId })
+        .select("-__v")
         .populate("thoughts")
         .populate("friends");
 
@@ -64,28 +65,48 @@ module.exports = {
   async deleteUser(req, res) {
     //delete remove a user's associated thoughts when deleted
     try {
-      const user = await findOne({ _id: req.params.userId });
-      if (!user) {
-        res.status(404).json({ message: "No user found with that id!" });
+      const userToDelete = await User.findOne({ _id: req.params.userId });
+
+      const thoughtArray = userToDelete.thoughts;
+
+      console.log(thoughtArray);
+
+      for (i = 0; i < thoughtArray.length; i++) {
+        await Thought.findOneAndDelete({ _id: thoughtArray[i] });
       }
-      const userThoughts = await Thought.find({ username: user.username });
-      const deletedThoughts = await Thought.deleteMany({
-        username: user.username,
-      });
-      if (userThoughts.length === deletedThoughts) {
-        const deleteUser = await findOneAndDelete({ _id: req.params.userId });
-        res.status(200).json({
-          message: "User thoughts deleted along with user!",
-          deletedUser: deleteUser,
-        });
-      } else {
-        res.status(410).json({
-          message:
-            "Error number of deleted thoughts does not match with original query!",
-          userThoughts: userThoughts,
-          deletedQty: deletedThoughts,
-        });
-      }
+
+      await User.findOneAndDelete({ _id: req.params.userId });
+
+      // for (i = 0; i < thoughtArrayLength; i++) {
+      //    console.log(await Thought.findOne({ userToDelete.thoughts[i]})
+      // }
+      // // const userThoughts = await Thought.find({
+      //   username: userToDelete.username,
+      // });
+
+      // const deletedThoughts = await Thought.deleteMany({
+      //   username: userToDelete.username,
+      // });
+
+      // console.log(deletedThoughts);
+
+      res
+        .status(200)
+        .json({ message: "User deleted and associated thoughts!" });
+
+      // if (userThoughts.length === deletedThoughts) {
+      //   const deleteUsed = await findOneAndDelete({ _id: req.params.userId });
+
+      //   res.status(200).json({
+      //     message: "User thoughts deleted along with user!",
+      //     deletedUser: deleteUserd,
+      //   });
+      // } else {
+      //   res.status(410).json({
+      //     message:
+      //       "Error number of deleted thoughts does not match with original query!",
+      //   });
+      // }
     } catch (err) {
       res.status(500).json({ message: err });
     }
